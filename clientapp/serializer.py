@@ -19,6 +19,12 @@ class CreateClientModelSerializer(ModelSerializer):
         return user
 
 
+class ClientListSerializer(ModelSerializer):
+    class Meta:
+        model = Client
+        fields = ('id', "first_name", "last_name", "sex", "avatar")
+
+
 class CustomAuthTokenSerializer(serializers.Serializer):
     email = serializers.EmailField(
         style={'input_type': 'email'},
