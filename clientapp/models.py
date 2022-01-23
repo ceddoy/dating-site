@@ -1,6 +1,8 @@
 from django.contrib.auth.base_user import AbstractBaseUser
 from django.contrib.auth.models import PermissionsMixin
 from django.db import models
+from django.contrib.gis.db import models as gis_models
+from django.contrib.gis.geos import Point
 
 from clientapp.managers import ClientManager
 
@@ -33,6 +35,11 @@ class Client(AbstractBaseUser, PermissionsMixin):
 
     likes = models.ManyToManyField(to='matchapp.Like', blank=True, verbose_name='Нравятся', related_name='user')
 
+    latitude = models.DecimalField(default=0.0, max_digits=22, decimal_places=16, verbose_name='Широта')
+    longitude = models.DecimalField(default=0.0, max_digits=22, decimal_places=16, verbose_name='Долгота')
+
+    location = gis_models.PointField(geography=True, default=Point(0.0, 0.0), verbose_name='Точка нахождения')
+
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата и время создания')
     updated_at = models.DateTimeField(auto_now=True, verbose_name='Дата и время изменения')
 
@@ -44,6 +51,16 @@ class Client(AbstractBaseUser, PermissionsMixin):
     class Meta:
         verbose_name = 'Участник'
         verbose_name_plural = 'Участники'
+
+    def save(self, *args, **kwargs):
+        latitude = self.latitude
+        longitude = self.longitude
+        self.location = self.get_point(longitude, latitude)
+        super().save(*args, **kwargs)
+
+    def get_point(self, longitude, latitude):
+        self.location = Point(float(longitude), float(latitude), srid=4326)
+        return self.location
 
     def __str__(self):
         return f"{self.last_name} {self.first_name}"

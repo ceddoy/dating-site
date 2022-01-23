@@ -42,6 +42,20 @@ class CustomAuthTokenSerializer(serializers.Serializer):
         read_only=True
     )
 
+    latitude = serializers.DecimalField(
+        label='Широта',
+        max_digits=22,
+        decimal_places=16,
+        required=True
+    )
+
+    longitude = serializers.DecimalField(
+        label='Долгота',
+        max_digits=22,
+        decimal_places=16,
+        required=True
+    )
+
     def validate(self, attrs):
         email = attrs.get('email')
         password = attrs.get('password')
