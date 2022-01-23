@@ -1,0 +1,11 @@
+asgiref
+backports.zoneinfo
+Django
+django-filter
+djangorestframework
+importlib-metadata
+Markdown
+Pillow
+pytz
+sqlparse
+zipp
