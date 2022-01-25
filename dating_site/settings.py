@@ -75,23 +75,23 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'dating_site.wsgi.application'
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.contrib.gis.db.backends.postgis',
-#         'NAME': 'dating_site',
-#         'USER': secrets.USER,
-#         'PASSWORD': secrets.PASSWORD,
-#         'HOST': 'localhost',
-#         'PORT': '',
-#     }
-# }
-
 DATABASES = {
     'default': {
-        'ENGINE': 'django.contrib.gis.db.backends.spatialite',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',
+        'NAME': 'dating_site',
+        'USER': secrets.USER,
+        'PASSWORD': secrets.PASSWORD,
+        'HOST': 'localhost',
+        'PORT': '',
     }
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.contrib.gis.db.backends.spatialite',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -134,4 +134,3 @@ EMAIL_HOST_PASSWORD = secrets.EMAIL_HOST_PASSWORD
 EMAIL_PORT = '587'
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
-

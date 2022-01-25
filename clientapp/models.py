@@ -35,8 +35,6 @@ class Client(AbstractBaseUser, PermissionsMixin):
 
     likes = models.ManyToManyField(to='matchapp.Like', blank=True, verbose_name='Нравятся', related_name='user')
 
-    location = gis_models.PointField(geography=True, default=Point(0.0, 0.0), verbose_name='Точка нахождения')
-
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата и время создания')
     updated_at = models.DateTimeField(auto_now=True, verbose_name='Дата и время изменения')
 
@@ -46,8 +44,23 @@ class Client(AbstractBaseUser, PermissionsMixin):
     objects = ClientManager()
 
     class Meta:
-        verbose_name = 'Участник'
-        verbose_name_plural = 'Участники'
+        verbose_name = 'Пользователь'
+        verbose_name_plural = 'Пользователи'
+
+    def __str__(self):
+        return f"{self.last_name} {self.first_name}"
+
+
+class Location(models.Model):
+
+    location = gis_models.PointField(geography=True, default=Point(0.0, 0.0), verbose_name='Точка нахождения')
+    user = models.ForeignKey(Client, on_delete=models.CASCADE, verbose_name='Пользователь')
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата и время создания')
+    updated_at = models.DateTimeField(auto_now=True, verbose_name='Дата и время изменения')
+
+    class Meta:
+        verbose_name = 'Координаты'
+        verbose_name_plural = 'Координаты'
 
     @property
     def latitude(self):
@@ -66,4 +79,4 @@ class Client(AbstractBaseUser, PermissionsMixin):
         self.location.x = var
 
     def __str__(self):
-        return f"{self.last_name} {self.first_name}"
+        return f'{self.location.y} {self.location.x}'

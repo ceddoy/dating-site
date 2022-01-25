@@ -38,17 +38,5 @@ class CustomObtainAuthToken(ObtainAuthToken):
             encoding="application/json",
         )
 
-    def post(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        user = serializer.validated_data['user']
-        token, created = Token.objects.get_or_create(user=user)
-        # user.latitude = serializer.validated_data['latitude']
-        # user.longitude = serializer.validated_data['longitude']
-        # user.save(update_fields=['location'])
-        Client.objects.filter(id=user.id).update(location=Point(float(serializer.validated_data['longitude']),
-                                                                float(serializer.validated_data['latitude'])))
-        return Response({'token': token.key})
-
 
 obtain_auth_token = CustomObtainAuthToken.as_view()

@@ -2,7 +2,7 @@ from django.contrib.auth import authenticate
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 
-from clientapp.models import Client
+from clientapp.models import Client, Location
 
 
 class CreateClientModelSerializer(ModelSerializer):
@@ -42,20 +42,6 @@ class CustomAuthTokenSerializer(serializers.Serializer):
         read_only=True
     )
 
-    latitude = serializers.DecimalField(
-        label='Широта',
-        max_digits=22,
-        decimal_places=16,
-        required=True
-    )
-
-    longitude = serializers.DecimalField(
-        label='Долгота',
-        max_digits=22,
-        decimal_places=16,
-        required=True
-    )
-
     def validate(self, attrs):
         email = attrs.get('email')
         password = attrs.get('password')
@@ -73,3 +59,23 @@ class CustomAuthTokenSerializer(serializers.Serializer):
 
         attrs['user'] = user
         return attrs
+
+
+class LocationSerializer(ModelSerializer):
+    latitude = serializers.DecimalField(
+        label='Широта',
+        max_digits=22,
+        decimal_places=16,
+        required=True
+    )
+
+    longitude = serializers.DecimalField(
+        label='Долгота',
+        max_digits=22,
+        decimal_places=16,
+        required=True
+    )
+
+    class Meta:
+        model = Location
+        fields = ('user', 'latitude', 'longitude')

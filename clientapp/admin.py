@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from clientapp.models import Client
+from clientapp.models import Client, Location
 
 
 class ClientViewAdmin(admin.ModelAdmin):
@@ -18,3 +18,4 @@ class ClientViewAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Client, ClientViewAdmin)
+admin.site.register(Location)

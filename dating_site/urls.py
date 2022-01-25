@@ -5,7 +5,7 @@ from rest_framework.routers import DefaultRouter
 
 from dating_site import settings
 from clientapp.custom_auth_token import obtain_auth_token
-from clientapp.views import CreateClientAPIView, ClientListView
+from clientapp.views import CreateClientAPIView, ClientListView, LocationCreateView
 from matchapp.views import MatchClientsRetrieveView
 
 router = DefaultRouter()
@@ -17,6 +17,7 @@ urlpatterns = [
     path('api_auth_token/', obtain_auth_token),
     path('api/clients/<int:pk>/match/', MatchClientsRetrieveView.as_view()),
     path('api/list/', ClientListView.as_view()),
+    path('api/location/', LocationCreateView.as_view()),
     path('silk/', include('silk.urls', namespace='silk')),
 ]
 
