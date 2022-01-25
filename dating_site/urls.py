@@ -17,6 +17,7 @@ urlpatterns = [
     path('api_auth_token/', obtain_auth_token),
     path('api/clients/<int:pk>/match/', MatchClientsRetrieveView.as_view()),
     path('api/list/', ClientListView.as_view()),
+    path('silk/', include('silk.urls', namespace='silk')),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -1,9 +1,11 @@
+from django.contrib.gis.geos import Point
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
 from rest_framework.compat import coreapi, coreschema
 from rest_framework.schemas import ManualSchema
 from rest_framework.response import Response
 
+from clientapp.models import Client
 from clientapp.permissions import ForNotAuthClientPermission
 from clientapp.serializer import CustomAuthTokenSerializer
 
@@ -41,9 +43,11 @@ class CustomObtainAuthToken(ObtainAuthToken):
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data['user']
         token, created = Token.objects.get_or_create(user=user)
-        user.latitude = serializer.validated_data['latitude']
-        user.longitude = serializer.validated_data['longitude']
-        user.save(force_update=True)
+        # user.latitude = serializer.validated_data['latitude']
+        # user.longitude = serializer.validated_data['longitude']
+        # user.save(update_fields=['location'])
+        Client.objects.filter(id=user.id).update(location=Point(float(serializer.validated_data['longitude']),
+                                                                float(serializer.validated_data['latitude'])))
         return Response({'token': token.key})
 
 

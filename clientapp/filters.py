@@ -12,6 +12,4 @@ class ClientListFilter(FilterSet):
         fields = ['distance_km', 'sex', 'last_name', 'first_name']
 
     def filter_list_users_distance(self, queryset, name, distance):
-        return queryset.filter(location__distance_lt=(self.request.user.get_point(self.request.user.longitude,
-                                                                                  self.request.user.latitude),
-                                                      Distance(km=distance)))
+        return queryset.filter(location__distance_lt=(self.request.user.location, Distance(km=distance)))

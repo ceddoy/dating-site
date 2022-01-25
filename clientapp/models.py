@@ -35,9 +35,6 @@ class Client(AbstractBaseUser, PermissionsMixin):
 
     likes = models.ManyToManyField(to='matchapp.Like', blank=True, verbose_name='Нравятся', related_name='user')
 
-    latitude = models.DecimalField(default=0.0, max_digits=22, decimal_places=16, verbose_name='Широта')
-    longitude = models.DecimalField(default=0.0, max_digits=22, decimal_places=16, verbose_name='Долгота')
-
     location = gis_models.PointField(geography=True, default=Point(0.0, 0.0), verbose_name='Точка нахождения')
 
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата и время создания')
@@ -52,15 +49,21 @@ class Client(AbstractBaseUser, PermissionsMixin):
         verbose_name = 'Участник'
         verbose_name_plural = 'Участники'
 
-    def save(self, *args, **kwargs):
-        latitude = self.latitude
-        longitude = self.longitude
-        self.location = self.get_point(longitude, latitude)
-        super().save(*args, **kwargs)
+    @property
+    def latitude(self):
+        return self.location.y
 
-    def get_point(self, longitude, latitude):
-        self.location = Point(float(longitude), float(latitude), srid=4326)
-        return self.location
+    @latitude.setter
+    def latitude(self, var):
+        self.location.y = var
+
+    @property
+    def longitude(self):
+        return self.location.x
+
+    @longitude.setter
+    def longitude(self, var):
+        self.location.x = var
 
     def __str__(self):
         return f"{self.last_name} {self.first_name}"
