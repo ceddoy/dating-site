@@ -1,4 +1,4 @@
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, password_validation
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 
@@ -11,6 +11,10 @@ class CreateClientModelSerializer(ModelSerializer):
         model = Client
         fields = ("first_name", "last_name", "email", "sex", "avatar", "password")
         extra_kwargs = {'password': {'write_only': True}, }
+
+    def validate_password(self, value):
+        password_validation.validate_password(value, self.instance)
+        return value
 
     def create(self, validated_data):
         user = super().create(validated_data)
