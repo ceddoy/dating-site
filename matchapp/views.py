@@ -1,4 +1,6 @@
+from django.db.models import Q
 from rest_framework.generics import RetrieveUpdateAPIView
+from rest_framework.response import Response
 
 from matchapp.models import Like
 from matchapp.serializer import ClientToLikeAnotherClient
@@ -10,16 +12,19 @@ class MatchClientsRetrieveView(RetrieveUpdateAPIView):
     queryset = Client.objects.all()
     serializer_class = ClientToLikeAnotherClient
 
-    # Процесс отработки при клики "Мне нравится"
+    # Процесс отработки при клики "Мне нравится"- скоро будет оптимизирован.
     def put(self, request, *args, **kwargs):
-        user_likes = Client.objects.get(id=kwargs['pk'])
-        like = Like.objects.get_or_create(like_user=user_likes)
-        Like.objects.get_or_create(like_user=request.user)
-        request.user.likes.add(like[0])
-        if user_likes.likes.filter(id=Like.objects.get(like_user=request.user).id):
-            send_email_to_users(user_likes, request.user)
-            self.request.data['email'] = user_likes.email
-        return self.update(request, *args, **kwargs)
+        from_like_user = Like.objects.create(from_like_user_id=request.user.id, to_like_user_id=kwargs.get('pk'))
+        to_like_user = Like.objects.filter(Q(from_like_user_id=kwargs.get('pk')) &
+                                           Q(to_like_user_id=request.user.id)).select_related('from_like_user').first()
+        if to_like_user:
+            send_email_to_users(to_like_user.from_like_user, request.user)
+            self.request.data['email'] = to_like_user.from_like_user.email
+            serializer = self.get_serializer(to_like_user.from_like_user, data=request.data)
+        else:
+            serializer = self.get_serializer(from_like_user.to_like_user, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        return Response(serializer.data)
 
     def get_serializer_context(self):
         context = super().get_serializer_context()
