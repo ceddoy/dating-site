@@ -33,8 +33,6 @@ class Client(AbstractBaseUser, PermissionsMixin):
                                     help_text='Определяет активен ли пользователь в системе.',
                                     verbose_name='Active')
 
-    likes = models.ManyToManyField(to='matchapp.Like', blank=True, verbose_name='Нравятся', related_name='user')
-
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата и время создания')
     updated_at = models.DateTimeField(auto_now=True, verbose_name='Дата и время изменения')
 
