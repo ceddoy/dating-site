@@ -1,0 +1,17 @@
+version: '3.7'
+
+services:
+  db:
+    image: postgis/postgis
+    privileged: true
+    restart: always
+    ports:
+      - "5438:5432"
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+      POSTGRES_DB: "dating_site"
+  redis:
+    image: redis:latest
+    ports:
+      - "6390:6379"
