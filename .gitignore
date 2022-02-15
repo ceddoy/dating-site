@@ -1,11 +1,4 @@
 .idea
-db.sqlite3
 dating_site/secrets.py
 
-/*/migrations/0*
-/*/migrations/__pycache__
-/*/__pycache__
-/*/*/__pycache__
-/*/*/*/__pycache__
-/*/*/*/*/__pycache__
-/*/*/*/*/*/__pycache__
+**/__pycache__/
